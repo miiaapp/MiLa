@@ -1,48 +1,101 @@
 const VERSION_FILE = "version.json";
 
 async function cargarInformacion() {
-  try {
-    const respuesta = await fetch(
-      VERSION_FILE + "?t=" + Date.now()
-    );
 
-    if (!respuesta.ok) {
-      throw new Error("No se pudo cargar la información");
-    }
+try {
 
-    const datos = await respuesta.json();
+const respuesta = await fetch(
+  VERSION_FILE + "?t=" + Date.now()
+);
 
-    // Versión
-    document.getElementById("version").textContent =
-      datos.version || "Desconocida";
+if (!respuesta.ok) {
+  throw new Error("Error al cargar la información");
+}
 
-    // Tamaño
-    document.getElementById("size").textContent =
-      datos.size || "Desconocido";
+const datos = await respuesta.json();
 
-    // Fecha
-    document.getElementById("date").textContent =
-      datos.releaseDate || "Sin fecha";
+// =========================
+// INFORMACIÓN DE LA APP
+// =========================
 
-    // Enlace de descarga
-    const boton = document.getElementById("downloadButton");
+const version = document.getElementById("version");
+const size = document.getElementById("size");
+const date = document.getElementById("date");
 
-    if (datos.downloadUrl) {
-      boton.href = datos.downloadUrl;
-    }
+if (version) {
+  version.textContent = datos.version || "Desconocida";
+}
 
-    // Novedades
-    if (datos.changelog && datos.changelog.length > 0) {
-      document.getElementById("updateTitle").textContent =
-        "Versión " + datos.version;
+if (size) {
+  size.textContent = datos.size || "Desconocido";
+}
 
-      document.getElementById("updateDescription").textContent =
-        datos.changelog.join(" · ");
-    }
+if (date) {
+  date.textContent = datos.releaseDate || "Sin fecha";
+}
 
-  } catch (error) {
-    console.error("Error:", error);
+// =========================
+// ENLACE DE DESCARGA
+// =========================
+
+const boton = document.getElementById("downloadButton");
+
+if (boton && datos.downloadUrl) {
+  boton.href = datos.downloadUrl;
+}
+
+// =========================
+// TÍTULO DE NOVEDADES
+// =========================
+
+const updateTitle = document.getElementById("updateTitle");
+
+if (updateTitle) {
+  updateTitle.textContent =
+    "Versión " + (datos.version || "");
+}
+
+// =========================
+// DESCRIPCIÓN
+// =========================
+
+const updateDescription =
+  document.getElementById("updateDescription");
+
+if (updateDescription) {
+
+  if (
+    datos.changelog &&
+    Array.isArray(datos.changelog) &&
+    datos.changelog.length > 0
+  ) {
+
+    updateDescription.textContent =
+      datos.changelog.join(" · ");
+
+  } else {
+
+    updateDescription.textContent =
+      "Sin novedades disponibles.";
+
   }
+}
+
+// =========================
+// ESTADO DE CARGA
+// =========================
+
+console.log("Información cargada correctamente");
+
+} catch (error) {
+
+console.error(
+  "No se pudo cargar la información:",
+  error
+);
+
+}
+
 }
 
 cargarInformacion();
