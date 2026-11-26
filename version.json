@@ -1,0 +1,12 @@
+{
+"version": "1.0.0",
+"versionCode": 1,
+"name": "Mi IA",
+"downloadUrl": "app.apk",
+"size": "25 MB",
+"releaseDate": "2026-11-26",
+"changelog": [
+"Primera versión",
+"Aplicación inicial"
+]
+}
